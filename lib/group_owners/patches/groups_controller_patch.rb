@@ -15,11 +15,17 @@ module GroupOwners
 
       module InstanceMethods
         def index_with_owner
-          @groups = (User.current.admin? ? Group.sorted.all : User.current.owned_groups)
 
           respond_to do |format|
-            format.html
-            format.api
+            format.html {
+              @groups = (User.current.admin? ? Group.sorted.all : User.current.owned_groups)
+              @user_count_by_group_id = user_count_by_group_id
+            }
+            format.api {
+              scope = Group.sorted
+              scope = scope.givable unless params[:builtin] == '1'
+              @groups = scope.all
+            }
           end
         end
 

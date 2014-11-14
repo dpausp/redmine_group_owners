@@ -9,11 +9,12 @@ module GroupOwners
       end
 
       module InstanceMethods
-        def group_settings_tabs_with_owner
-          tabs = [{:name => 'general', :partial => 'groups/general', :label => :label_general},
-                  {:name => 'users', :partial => 'groups/users', :label => :label_user_plural},
-          ]
-          tabs << {:name => 'memberships', :partial => 'groups/memberships', :label => :label_project_plural} << {:name => 'owners', :partial => 'groups/owners', :label => :label_owner_plural} if User.current.admin?
+        def group_settings_tabs_with_owner(group)
+          tabs = []
+          tabs << {:name => 'general', :partial => 'groups/general', :label => :label_general}
+          tabs << {:name => 'users', :partial => 'groups/users', :label => :label_user_plural} if group.givable?
+          tabs << {:name => 'memberships', :partial => 'groups/memberships', :label => :label_project_plural} 
+          tabs << {:name => 'owners', :partial => 'groups/owners', :label => :label_owner_plural} if User.current.admin?
           tabs
         end
 
